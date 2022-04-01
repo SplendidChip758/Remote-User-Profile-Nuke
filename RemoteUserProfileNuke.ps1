@@ -30,25 +30,26 @@ function Header {
 # Main Menu
 function Main-Menu {
 
-    Write-Host "Menu:"
-
+    Write-Host "Menu:" -ForegroundColor Green
     Write-Host "1. Simple Batch Mode"
     Write-Host "2. Advanced Targeted Host Mode"
     Write-Host "3. Comming soon"
-    Write-Host
+    Write-Host ""
 }
 
 # Simple Mode Menu
 function Simple-Menu {
     
-    Write-Host "Simple Mode Options:"
-
-    
+    Write-Host "Simple Mode:" -ForegroundColor Green
+    Write-Host "1. Kiosks"
+    Write-Host "2. Fab"
+    Write-Host "3. IDK"
+    Write-Host ""
 }
 
 # Exit script function
-function Exit {
-    Headerfun
+function Exit-Script {
+    Header
     Write-Host "Exiting..." -ForegroundColor Yellow
     Start-Sleep 5
     exit
@@ -63,14 +64,11 @@ function Start-Script {
 
         $option = $(Write-Host "Select An option (q to Quit): " -ForegroundColor Green -NoNewline; Read-Host)
 
-    } until ($option -eq 'q')
+    } until ($option -eq '1' -or $option -eq '2' -or $option -eq '66' -or $option -eq 'q')
 
     switch ($option) {
-        '1' {
-            Write-Host "hello there"
-            Simple-Mode
-            pause
-                
+        '1' {           
+            Simple-Mode               
         }
         '2' {
 
@@ -79,6 +77,7 @@ function Start-Script {
 
         }
         'q'{
+            Exit-Script
 
         }
     }    
@@ -86,32 +85,50 @@ function Start-Script {
 
 function Simple-Mode {
 
-    Header
-    Simple-Menu
-    
+    do {
 
-    
+        Header
+        Simple-Menu
+
+        $option = $(Write-Host "Select An option (q to Quit): " -ForegroundColor Green -NoNewline; Read-Host)
+
+    } until ($option -eq '1' -or $option -eq '2' -or $option -eq '3' -or $option -eq 'q')
+
+    switch ($option) {
+        '1' {
+            Get-UserID $kiosks
+        }
+        '2' {
+
+        }
+        '3' {
+
+        }
+        'q'{
+            Exit-Script
+
+        }
+    }       
 }
 
-function UserIDFun {
+function Get-UserID($hosts) {
 
-    Headerfun
+    Header
     
     $userID = $(Write-Host "Enter User ID To Nuke: " -ForegroundColor Green -NoNewline; Read-Host)
-    $hostNames = $(Write-Host " Enter Hosts to search: " -ForegroundColor Green -NoNewline; Read-Host)
 
-    SearchHosts $userID $hostNames
+    Search-Hosts $userID $hosts
 
 }
 
-function SearchHosts($userID, $hostNames) {
+function Search-Hosts($userID, $hosts) {
 
-    Headerfun
+    Header
 
-    Write-Host "Serching for" $userID "on Kiosks." -ForegroundColor Green
+    Write-Host "Serching for" $userID "on" $hosts  -ForegroundColor Green
 
     # For loop to search all 6 Kiosks and add the results to a List
-    foreach ($computerName in $hostNames){
+    foreach ($computerName in $hosts){
         $f = Get-WmiObject -ComputerName $computerName -class Win32_Userprofile | Where-Object {$_.LocalPath -eq 'C:\Users\'+$userID} | Select-Object -ExpandProperty __Server
         IF([string]::IsNullOrWhiteSpace($f)) {            
                     
@@ -124,11 +141,11 @@ function SearchHosts($userID, $hostNames) {
 
     # Check if profiles were found
     if ($foundProfiles.Count -eq 0){
-        Clear-Host
-        HeaderFun
+        
+        Header
         Write-Host "No profiles were found for" $userID
         Start-Sleep 5
-        ExitFun
+        Exit-Script
 
     } else {
         $yn = $(Write-Host "Would you like to Delete the found Profiles [y,n]: " -ForegroundColor Green -NoNewline; Read-Host)
