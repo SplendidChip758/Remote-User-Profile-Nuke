@@ -1,14 +1,18 @@
 # Script to serch for User profiles on the kiosks and delete them.
 # Created By: Daniel Donahay
 
-UserIDFun
-
-# Array list set up
+# Hosts arrays
 $kiosks = "CAMA-SPROF-D01", "CAMA-SPROF-D02", "CAMA-KSKCF-D01", "CAMA-KSKCR-D01", "CAMA-KSKCR-D02", "CAMA-KSKFB-D01"
+$fab = " "
+
+# user profile serch reslts array init
 $foundProfiles = [System.Collections.ArrayList]::new()
 
+#Script Start
+startScript
+
 # Header Function
-function Headerfun {
+function Header {
 
     Clear-Host
 
@@ -23,12 +27,63 @@ function Headerfun {
     Write-Host ""
 }
 
+# Main Menu
+function Main-Menu {
+
+    Write-Host "Menu:"
+
+    Write-Host "1. Simple Batch Mode"
+    Write-Host "2. Advanced Targeted Host Mode"
+    Write-Host "3. Bilbo Baggins"
+    Write-Host
+}
+
+# Simple Mode Menu
+function Simple-Menu {
+    
+    Write-Host "Simple Mode Options:"
+
+    
+}
+
 # Exit script function
-function ExitFun {
+function Exit {
     Headerfun
     Write-Host "Exiting..." -ForegroundColor Yellow
     Start-Sleep 5
     exit
+}
+
+function startScript {
+
+    do {
+
+        Header
+        Main-Menu
+
+        $option = $(Write-Host "Select An option (q to Quit): " -ForegroundColor Green -NoNewline; Read-Host)
+
+        switch ($option) {
+            '1' {
+                Simple-Mode
+            }
+            '2' {
+
+            }
+            '3' {
+
+            }
+
+        }  
+
+    } until ($option -eq 'q')
+    
+}
+
+function Simple-Menu {
+    
+
+    
 }
 
 function UserIDFun {
