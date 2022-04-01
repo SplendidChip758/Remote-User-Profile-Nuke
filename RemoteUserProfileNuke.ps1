@@ -9,7 +9,7 @@ $fab = " "
 $foundProfiles = [System.Collections.ArrayList]::new()
 
 #Script Start
-startScript
+Start-Script
 
 # Header Function
 function Header {
@@ -34,7 +34,7 @@ function Main-Menu {
 
     Write-Host "1. Simple Batch Mode"
     Write-Host "2. Advanced Targeted Host Mode"
-    Write-Host "3. Bilbo Baggins"
+    Write-Host "3. Comming soon"
     Write-Host
 }
 
@@ -54,7 +54,7 @@ function Exit {
     exit
 }
 
-function startScript {
+function Start-Script {
 
     do {
 
@@ -63,24 +63,31 @@ function startScript {
 
         $option = $(Write-Host "Select An option (q to Quit): " -ForegroundColor Green -NoNewline; Read-Host)
 
-        switch ($option) {
-            '1' {
-                Simple-Mode
-            }
-            '2' {
-
-            }
-            '3' {
-
-            }
-
-        }  
-
     } until ($option -eq 'q')
-    
+
+    switch ($option) {
+        '1' {
+            Write-Host "hello there"
+            Simple-Mode
+            pause
+                
+        }
+        '2' {
+
+        }
+        '66' {
+
+        }
+        'q'{
+
+        }
+    }    
 }
 
-function Simple-Menu {
+function Simple-Mode {
+
+    Header
+    Simple-Menu
     
 
     
