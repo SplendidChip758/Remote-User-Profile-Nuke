@@ -71,9 +71,11 @@ function Start-Script {
             Simple-Mode               
         }
         '2' {
+            Advanced-Mode
 
         }
         '66' {
+            Order-66
 
         }
         'q'{
@@ -90,13 +92,43 @@ function Simple-Mode {
         Header
         Simple-Menu
 
+        $option = $(Write-Host "Select A group to scan (q to Quit): " -ForegroundColor Green -NoNewline; Read-Host)
+        Write-Host $kiosks
+
+    } until ($option -eq '1' -or $option -eq '2' -or $option -eq '3' -or $option -eq 'q')
+
+    switch ($option) {
+        '1' {
+            $userID = Get-UserID
+            Search-Hosts($userID, $kiosks) 
+        }
+        '2' {
+
+        }
+        '3' {
+
+        }
+        'q'{
+            Exit-Script
+        }
+    }       
+}
+
+function Advanced-Mode {
+
+    do {
+
+        Header
+        Advanced-Menu
+
         $option = $(Write-Host "Select An option (q to Quit): " -ForegroundColor Green -NoNewline; Read-Host)
 
     } until ($option -eq '1' -or $option -eq '2' -or $option -eq '3' -or $option -eq 'q')
 
     switch ($option) {
         '1' {
-            Get-UserID $kiosks
+            Get-UserID
+            Get-Hostname
         }
         '2' {
 
@@ -111,13 +143,18 @@ function Simple-Mode {
     }       
 }
 
-function Get-UserID($hosts) {
+function Order-66 {
+
+    
+}
+
+function Get-UserID {
 
     Header
     
-    $userID = $(Write-Host "Enter User ID To Nuke: " -ForegroundColor Green -NoNewline; Read-Host)
+    $userID = $(Write-Host "Enter User IDs To Nuke: " -ForegroundColor Green -NoNewline; Read-Host)
 
-    Search-Hosts $userID $hosts
+    return $userID
 
 }
 
