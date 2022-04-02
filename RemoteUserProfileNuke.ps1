@@ -5,6 +5,9 @@
 $kiosks = "CAMA-SPROF-D01", "CAMA-SPROF-D02", "CAMA-KSKCF-D01", "CAMA-KSKCR-D01", "CAMA-KSKCR-D02", "CAMA-KSKFB-D01"
 $fab = " "
 
+# Hosts to search array init
+$hostList =[System.Collections.ArrayList]::new()
+
 # user profile serch reslts array init
 $foundProfiles = [System.Collections.ArrayList]::new()
 
@@ -43,7 +46,16 @@ function Simple-Menu {
     Write-Host "Simple Mode:" -ForegroundColor Green
     Write-Host "1. Kiosks"
     Write-Host "2. Fab"
-    Write-Host "3. IDK"
+    Write-Host "3. Custom"
+    Write-Host ""
+}
+
+function Advanced-Menu {
+    
+    Write-Host "Advanced Mode:" -ForegroundColor Green
+    Write-Host "1. multi"
+    Write-Host "2. single"
+    Write-Host "3. Custom"
     Write-Host ""
 }
 
@@ -75,7 +87,7 @@ function Start-Script {
 
         }
         '66' {
-            Order-66
+            Get-Baggins
 
         }
         'q'{
@@ -99,11 +111,10 @@ function Simple-Mode {
 
     switch ($option) {
         '1' {
-            $userID = Get-UserID
-            Search-Hosts($userID, $kiosks) 
+            Search-Hosts (Get-UserID) $kiosks 
         }
         '2' {
-
+            Search-Hosts (Get-UserID) $fab
         }
         '3' {
 
@@ -127,8 +138,7 @@ function Advanced-Mode {
 
     switch ($option) {
         '1' {
-            Get-UserID
-            Get-Hostname
+            Search-Hosts (Get-UserID) (Get-Hosts)
         }
         '2' {
 
@@ -143,7 +153,7 @@ function Advanced-Mode {
     }       
 }
 
-function Order-66 {
+function Get-Baggins {
 
     
 }
@@ -156,6 +166,54 @@ function Get-UserID {
 
     return $userID
 
+}
+
+function Get-Hosts {
+
+    do {
+
+        Header
+
+        Write-Host ""
+        Write-Host "Hosts: " $hostList 
+        Write-Host
+
+        do {
+
+            Header
+
+            $hosts = $(Write-Host "Enter Host To Nuke: " -ForegroundColor Green -NoNewline; Read-Host)
+
+            IF([string]::IsNullOrWhiteSpace($hosts)) {
+
+                Resolve-DnsName -name $hosts -ErrorAction SilentlyContinue | Select-Object 
+
+                if($?){
+                    $valid = $True
+                }else {
+                    Header
+                    Write-Host "Hostname is invalid or is disconected"
+                
+                }
+            } else {
+                Header
+                    Write-Host "Hostname is invalid or is disconected"
+            }
+
+
+
+        } until ($valid -eq $True)
+
+        $hostList.Add($hosts)
+    
+        
+    } until ($option -eq "c" -or $option -eq "C" -or $option -eq "confirm")
+    
+
+    return $hostList
+    
+    
+    
 }
 
 function Search-Hosts($userID, $hosts) {
