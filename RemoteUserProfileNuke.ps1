@@ -87,7 +87,7 @@ function Start-Script {
 
         }
         '66' {
-            Get-Baggins
+            Baggins-Mode
 
         }
         'q'{
@@ -153,7 +153,7 @@ function Advanced-Mode {
     }       
 }
 
-function Get-Baggins {
+function Baggins-mode {
 
     
 }
