@@ -178,36 +178,36 @@ function Get-Hosts {
         Write-Host "Hosts: " $hostList 
         Write-Host
 
-        do {
+        
+
+        $input = $(Write-Host "Enter Host To Nuke: " -ForegroundColor Green -NoNewline; Read-Host)
+
+        IF([string]::IsNullOrWhiteSpace($input)) {
 
             Header
+            Write-Host "Hostname is invalid or is disconected"
+            pause
 
-            $hosts = $(Write-Host "Enter Host To Nuke: " -ForegroundColor Green -NoNewline; Read-Host)
+        } else {
+            
+            #Resolve-DnsName -name $hosts -ErrorAction SilentlyContinue
+            #Test-Connection -TargetName $hosts -Quiet
 
-            IF([string]::IsNullOrWhiteSpace($hosts)) {
-
-                Resolve-DnsName -name $hosts -ErrorAction SilentlyContinue | Select-Object 
-
-                if($?){
-                    $valid = $True
-                }else {
-                    Header
-                    Write-Host "Hostname is invalid or is disconected"
-                
-                }
-            } else {
+            if((Resolve-DnsName -name $input -ErrorAction SilentlyContinue) -and (Test-Connection -TargetName $input -Quiet)){
+                $hostList.Add($input)
+            }else {
                 Header
-                    Write-Host "Hostname is invalid or is disconected"
+                Write-Host "Hostname is invalid or is disconected"   
+                pause
             }
+        }
 
 
 
-        } until ($valid -eq $True)
-
-        $hostList.Add($hosts)
+        
     
         
-    } until ($option -eq "c" -or $option -eq "C" -or $option -eq "confirm")
+    } until ($input -eq "c" -or $input -eq "C" -or $input -eq "confirm")
     
 
     return $hostList
