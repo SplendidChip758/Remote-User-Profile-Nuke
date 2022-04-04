@@ -1,9 +1,33 @@
 # Script to serch for User profiles on the kiosks and delete them.
+# Requiers Powershell Version 7.1
 # Created By: Daniel Donahay
+
+# Check Version Compatability
+$ver + $PSVersionTable.PSVersion | Select-Object -ExpandProperty Major
+
+if ($ver -ne 7) {
+    Header
+
+    Write-Host "This Script Requires Powershell Version 7."
+    Write-Host "Please update to Powershell 7: " -NoNewline
+    Write-Host "https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2" -ForegroundColor Blue
+    Write-Host "Or use script for Powershell 5.1: " -NoNewline
+    Write-Host "https://github.com/SplendidChip758/Remote-User-Profile-Nuke-5.1.git" -ForegroundColor Blue
+
+    Pause
+    Exit-Script
+    
+}
 
 # Hosts arrays
 $kiosks = "CAMA-SPROF-D01", "CAMA-SPROF-D02", "CAMA-KSKCF-D01", "CAMA-KSKCR-D01", "CAMA-KSKCR-D02", "CAMA-KSKFB-D01"
-$fab = " "
+
+$photo = ""
+$etch = ""
+$thinFilms = ""
+$diff = ""
+$epi = ""
+$fab = $photo + $etch + $thinFilms + $diff + $epi
 
 # Hosts to search array init
 $hostList =[System.Collections.ArrayList]::new()
@@ -45,16 +69,20 @@ function Simple-Menu {
     
     Write-Host "Simple Mode:" -ForegroundColor Green
     Write-Host "1. Kiosks"
-    Write-Host "2. Fab"
-    Write-Host "3. Custom"
+    Write-Host "2. Fab Wide"
+    Write-Host "3. Photo"
+    Write-Host "4. Etch"
+    Write-Host "5. ThinFilms"
+    Write-Host "6. Diff"
+    Write-Host "7. Epi"
     Write-Host ""
 }
 
 function Advanced-Menu {
     
     Write-Host "Advanced Mode:" -ForegroundColor Green
-    Write-Host "1. multi"
-    Write-Host "2. single"
+    Write-Host "1. Multi"
+    Write-Host "2. Single"
     Write-Host "3. Custom"
     Write-Host ""
 }
@@ -104,7 +132,7 @@ function Simple-Mode {
         Header
         Simple-Menu
 
-        $option = $(Write-Host "Select A group to scan (q to Quit): " -ForegroundColor Green -NoNewline; Read-Host)
+        $option = $(Write-Host "Select A group to Search (q to Quit): " -ForegroundColor Green -NoNewline; Read-Host)
         Write-Host $kiosks
 
     } until ($option -eq '1' -or $option -eq '2' -or $option -eq '3' -or $option -eq 'q')
@@ -117,7 +145,19 @@ function Simple-Mode {
             Search-Hosts (Get-UserID) $fab
         }
         '3' {
-
+            Search-Hosts (Get-UserID) $photo
+        }
+        '4' {
+            Search-Hosts (Get-UserID) $etch 
+        }
+        '5' {
+            Search-Hosts (Get-UserID) $thinFilms 
+        }
+        '6' {
+            Search-Hosts (Get-UserID) $diffiff 
+        }
+        '7' {
+            Search-Hosts (Get-UserID) $epi
         }
         'q'{
             Exit-Script
@@ -190,9 +230,6 @@ function Get-Hosts {
 
         } else {
             
-            #Resolve-DnsName -name $hosts -ErrorAction SilentlyContinue
-            #Test-Connection -TargetName $hosts -Quiet
-
             if((Resolve-DnsName -name $input -ErrorAction SilentlyContinue) -and (Test-Connection -TargetName $input -Quiet)){
                 $hostList.Add($input)
             }else {
