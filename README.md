@@ -1,3 +1,3 @@
 # Remote-User-Profile-Nuke
 
-Requiers PowerShell Version 7.1
+Requiers PowerShell Version 5.1
