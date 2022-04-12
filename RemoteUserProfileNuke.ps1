@@ -1,32 +1,18 @@
 # Script to serch for User profiles on the kiosks and delete them.
-# Requiers Powershell Version 7.1
+# Requiers Powershell Version 5.1
 # Created By: Daniel Donahay
 
-# Check Version Compatability
-$ver + $PSVersionTable.PSVersion | Select-Object -ExpandProperty Major
+# HostsNmaes import
+$hostList = get-content .\HostNames.json | ConvertFrom-Json
 
-if ($ver -ne 7) {
-    Header
+$kiosks = $hostList.kiosks
+$training = $hostList.training
 
-    Write-Host "This Script Requires Powershell Version 7."
-    Write-Host "Please update to Powershell 7: " -NoNewline
-    Write-Host "https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2" -ForegroundColor Blue
-    Write-Host "Or use script for Powershell 5.1: " -NoNewline
-    Write-Host "https://github.com/SplendidChip758/Remote-User-Profile-Nuke-5.1.git" -ForegroundColor Blue
-
-    Pause
-    Exit-Script
-    
-}
-
-# Hosts arrays
-$kiosks = "CAMA-SPROF-D01", "CAMA-SPROF-D02", "CAMA-KSKCF-D01", "CAMA-KSKCR-D01", "CAMA-KSKCR-D02", "CAMA-KSKFB-D01"
-
-$photo = ""
-$etch = ""
-$thinFilms = ""
-$diff = ""
-$epi = ""
+$photo = $hostList.fab.photo
+$etch = $hostList.fab.etch
+$thinFilms = $hostList.fab.thinFilms
+$diff = $hostList.fab.diff
+$epi = $hostList.fab.epi
 $fab = $photo + $etch + $thinFilms + $diff + $epi
 
 # Hosts to search array init
@@ -58,16 +44,17 @@ function Header {
 function Main-Menu {
 
     Write-Host "Menu:" -ForegroundColor Green
-    Write-Host "1. Simple Batch Mode"
-    Write-Host "2. Advanced Targeted Host Mode"
-    Write-Host "3. Comming soon"
+    Write-Host "1. Single Target"
+    Write-Host "2. Simple Batch Mode"
+    Write-Host "3. Advanced Targeted Search TODO"
+    Write-Host "4. Advanced Multi Search TODO"
     Write-Host ""
 }
 
 # Simple Mode Menu
 function Simple-Menu {
     
-    Write-Host "Simple Mode:" -ForegroundColor Green
+    Write-Host "Batch Mode:" -ForegroundColor Green
     Write-Host "1. Kiosks"
     Write-Host "2. Fab Wide"
     Write-Host "3. Photo"
@@ -75,6 +62,7 @@ function Simple-Menu {
     Write-Host "5. ThinFilms"
     Write-Host "6. Diff"
     Write-Host "7. Epi"
+    Write-Host "8. Training"
     Write-Host ""
 }
 
@@ -111,7 +99,13 @@ function Start-Script {
             Simple-Mode               
         }
         '2' {
-            Advanced-Mode
+            Batch-Mode
+
+        }
+        '3'{
+
+        }
+        '4'{
 
         }
         '66' {
@@ -126,6 +120,13 @@ function Start-Script {
 }
 
 function Simple-Mode {
+
+    Header
+    
+    
+}
+
+function Batch-Mode {
 
     do {
 
@@ -154,7 +155,7 @@ function Simple-Mode {
             Search-Hosts (Get-UserID) $thinFilms 
         }
         '6' {
-            Search-Hosts (Get-UserID) $diffiff 
+            Search-Hosts (Get-UserID) $diff
         }
         '7' {
             Search-Hosts (Get-UserID) $epi
